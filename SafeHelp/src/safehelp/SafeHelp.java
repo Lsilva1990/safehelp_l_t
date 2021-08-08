@@ -10,7 +10,7 @@ package safehelp;
  * @author lsilva
  */
 public class SafeHelp {
-
+//Criada mensagem aqui
     /**
      * @param args the command line arguments
      */
