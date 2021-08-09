@@ -5,6 +5,11 @@
  */
 package safehelp;
 
+import FakeDB.DB;
+import SafeHelpServer.Modal.User;
+
+
+
 /**
  *
  * @author lsilva
@@ -15,7 +20,14 @@ public class SafeHelp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        DB db1 = new DB();
+        
+        User u = new User("Thiago", "123");
+        
+        db1.dbCreateUser(u);
+
+        
     }
     
 }
