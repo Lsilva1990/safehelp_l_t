@@ -5,8 +5,7 @@
  */
 package safehelp;
 
-
-import SafeHelpServer.Modal.User;
+import SafeHelpServer.Server;
 
 
 
@@ -21,13 +20,9 @@ public class SafeHelp {
      */
     public static void main(String[] args) {
         
-        DB db1 = new DB();
+        Server s = new Server(8888);
         
-        User u = new User("Thiago", "123");
-        
-        db1.dbCreateUser(u);
-
-        
+        s.run();
     }
     
 }

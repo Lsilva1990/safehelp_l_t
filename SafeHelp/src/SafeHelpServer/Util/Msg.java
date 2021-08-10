@@ -24,14 +24,12 @@ public class Msg implements Serializable{
     
     Map<String,Object> msg;
     Map<String,Map<String,Object>> params;
-    Map<String,String> identify;
     
     public Msg(String route)
     {
        this.route = route;
        msg = new HashMap<>();
        params = new HashMap<>();
-       identify = new HashMap<>();
        
     }
     
