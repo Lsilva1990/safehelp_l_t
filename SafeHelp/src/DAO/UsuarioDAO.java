@@ -26,15 +26,15 @@ public class UsuarioDAO {
         objetoJPA = new UsuarioJpaController(emf);
     }
     
-    public void (Usuario objeto) throws Exception{
+    public void add(Usuario objeto) throws Exception{
         objetoJPA.create(objeto);
     }
     
-    public void (Usuario objeto) throws Exception{
+    public void edit(Usuario objeto) throws Exception{
         objetoJPA.edit(objeto);
     }
     
-    public void remove(short id) throws NonexistentEntityException{
+    public void remove(int id) throws NonexistentEntityException{
         objetoJPA.destroy(id);
     }
     
