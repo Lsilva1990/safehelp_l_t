@@ -12,7 +12,6 @@
 package SafeHelpServer;
 
 import DAO.UsuarioDAO;
-import com.google.gson.Gson;
 import entidades.Usuario;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -31,7 +30,6 @@ public class Server {
 
     private int bind;
     Usuario user;
-    Gson gson = new Gson();
 
     public Server(int bind) {
         createConection(bind);

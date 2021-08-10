@@ -5,7 +5,6 @@
  */
 package SafeHelpClient;
 
-import com.google.gson.Gson;
 import entidades.Usuario;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +19,6 @@ import org.json.JSONObject;
  */
 public class Client {
     
-    Gson gson = new Gson();
     Usuario u = new Usuario(1, "Thiago", "1022547820", "tgimisull@gmail.com", "123");
     
     
