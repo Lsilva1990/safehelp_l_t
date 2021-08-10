@@ -12,6 +12,9 @@
 
 package SafeHelpServer;
 
+import SafeHelpServer.Util.ClientStatus;
+import SafeHelpServer.Util.Msg;
+import SafeHelpServer.Util.MsgStatus;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -38,89 +41,99 @@ public class Server {
         return socket;
     }
     
-    private void treatConnection(Socket socket){
+        private void closeSocket(Socket s) throws IOException {
+        s.close();
+    }
+
+    private void sendMsg(Object o, ObjectOutputStream out) throws IOException {
+        out.writeObject(o);
+        out.flush();
+    }
+
+    
+    private void treatConnection(Socket socket) throws ClassNotFoundException, IOException{
         
          try {
         ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
         
         System.out.println("Tratando...");
-            Estados estado = Estados.CONECTADO;
-            while (estado != Estados.SAIR) {
+            ClientStatus clientStatus = ClientStatus.CONECTED;
+            while (clientStatus != ClientStatus.EXIT) {
 
-                Mensagem m = (Mensagem) input.readObject();
-                System.out.println("Mensagem do cliente:\n" + m);
+                Msg msgReceive = (Msg) input.readObject();
+                System.out.println("Mensagem do cliente:\n" + msgReceive);
               
 
-                String operacao = m.getOperacao();
-                Mensagem reply = new Mensagem(operacao + "REPLY");
+                String route = (String) msgReceive.getParam("identificador");
+                Msg reply = new Msg(route + "REPLY");
                 //estados conectado autenticado
-                switch (estado) {
-                    case CONECTADO:
-                        switch (operacao) {
-                            case "LOGIN":
+                switch (clientStatus) {
+                    case CONECTED:
+                        switch (route) {
+                            case "login":
                                 try {
-                                    String user = (String) m.getParam("user");
-                                    String pass = (String) m.getParam("pass");
+                                    String user = (String) msgReceive.getParam("user");
+                                    String pass = (String) msgReceive.getParam("pass");
 
                                     if (user.equals("ALUNO") && pass.equals("ESTUDIOSO")) {
-                                        reply.setStatus(Status.OK);
-                                        estado = Estados.AUTENTICADO;
+                                        reply.setStatus(MsgStatus.OK);
+                                        clientStatus = ClientStatus.AUTENTICATED;
                                     } else {
-                                        reply.setStatus(Status.ERROR);
+                                        reply.setStatus(MsgStatus.ERROR);
                                     }
 
                                 } catch (Exception e) {
-                                    reply.setStatus(Status.PARAMERROR);
+                                    reply.setStatus(MsgStatus.PARAMERROR);
                                     reply.setParam("msg", "Erro nos parâmetros do protocolo.");
                                 }
                                 break;
                             case "HELLO":
-                                String nome = (String) m.getParam("nome");
-                                String sobrenome = (String) m.getParam("sobrenome");
+                                String nome = (String) msgReceive.getParam("nome");
+                                String sobrenome = (String) msgReceive.getParam("sobrenome");
 
-                                reply = new Mensagem("HELLOREPLY");
+                                reply = new Msg("HELLOREPLY");
 
                                 if (nome == null || sobrenome == null) {
-                                    reply.setStatus(Status.PARAMERROR);
+                                    reply.setStatus(MsgStatus.PARAMERROR);
                                 } else {
-                                    reply.setStatus(Status.OK);
+                                    reply.setStatus(MsgStatus.OK);
                                     reply.setParam("mensagem", "Hello World, " + nome + " " + sobrenome);
 
                                 }
                                 break;
                             case "SAIR":
-                                reply.setStatus(Status.OK);
-                                estado = Estados.SAIR;
+                                reply.setStatus(MsgStatus.OK);
+                                clientStatus = ClientStatus.EXIT;
                                 break;
                             default:
                                 //responder mensagem de erro: Não autorizado/ou inválida
-                                reply.setStatus(Status.ERROR);
+                                reply.setStatus(MsgStatus.ERROR);
                                 reply.setParam("msg", "MENSAGEM NÃO AUTORIZADA OU INVÁLIDA!");
 
                                 break;
                         }
                         break;
-                    case AUTENTICADO:
-                        switch (operacao) {
+                    case AUTENTICATED:
+                        switch (route) {
                             case "DIV":
                                 try {
 
-                                    Integer op1 = (Integer) m.getParam("op1");
-                                    Integer op2 = (Integer) m.getParam("op2");
+                                    Integer op1 = (Integer) msgReceive.getParam("op1");
+                                    Integer op2 = (Integer) msgReceive.getParam("op2");
                                     //testar os dados
-                                    reply = new Mensagem("DIVREPLY");
+                                    reply = new Msg("DIVREPLY");
                                     if (op2 == 0) {
-                                        reply.setStatus(Status.DIVZERO);
+                                        reply.setStatus(MsgStatus.DIVZERO);
                                     } else {
-                                        reply.setStatus(Status.OK);
+                                        reply.setStatus(MsgStatus.OK);
                                         System.out.println("Op1: " + op1 + " Op2: " + op2);
                                         float div = (float) op1 / op2;
                                         reply.setParam("res", div);
                                     }
                                 } catch (Exception e) {
-                                    reply = new Mensagem("DIVREPLY");
-                                    reply.setStatus(Status.PARAMERROR);
+                                    reply = new Msg("DIVREPLY");
+                                    reply.setStatus(MsgStatus.PARAMERROR);
                                 }
                                 break;
                             case "SUB":
@@ -130,21 +143,21 @@ public class Server {
                             case "SOMA":
                                 break;
                             case "LOGOUT":
-                                reply.setStatus(Status.OK);
-                                estado = Estados.CONECTADO;
+                                reply.setStatus(MsgStatus.OK);
+                                clientStatus = ClientStatus.CONECTED;
                                 break;
                             case "SAIR":
                                 //DESIGN PATTERN STATE
-                                reply.setStatus(Status.OK);
-                                estado = Estados.SAIR;
+                                reply.setStatus(MsgStatus.OK);
+                                clientStatus = ClientStatus.EXIT;
                                 break;
                             default:
-                                reply.setStatus(Status.ERROR);
+                                reply.setStatus(MsgStatus.ERROR);
                                 reply.setParam("msg", "MENSAGEM NÃO AUTORIZADA OU INVÁLIDA!");
                                 break;
                         }
                         break;
-                    case SAIR: //ESTADP
+                    case EXIT: //ESTADP
                         break;
 
                 }
@@ -163,23 +176,32 @@ public class Server {
         } finally {
             //final do tratamento do protocolo
             /*4.1 - Fechar socket de comunicação entre servidor/cliente*/
-            fechaSocket(socket);
+            closeSocket(socket);
         }
 
     }
    
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
        
-        try {
-                Server server = new Server();
-                server.createServerSocket(6666);
-                Socket socket = server.waitConection();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
+                try {
 
+            Server server = new Server();
+
+            server.createServerSocket(5555);
+            while (true) {
+                System.out.println("Aguardando conexão...");
+                Socket socket = server.waitConection();//protocolo
+                System.out.println("Cliente conectado.");
+                //Outro processo
+                
+                server.treatConnection(socket);
+                System.out.println("Cliente finalizado.");
+            }
+        } catch (IOException e) {
+            //trata exceção
+            System.out.println("Erro no servidor: " + e.getMessage());
+        }
     }
     
 }

@@ -15,24 +15,24 @@ import java.util.Map;
  */
 public class Msg implements Serializable{
     
-    private String operacao;
+    private String route;
     private MsgStatus status;
     
     /* 
     chave : Object
     */
     
-    Map<String, Object> params;
+    Map<String,Object> params;
     
-    public Msg(String operacao)
+    public Msg(String route)
     {
-       this.operacao = operacao;
+       this.route = route;
        params = new HashMap<>();
     }
     
-    public String getOperacao()
+    public String getRoute()
     {
-        return operacao;
+        return route;
     }
     
     public void setStatus(MsgStatus s)
@@ -60,7 +60,7 @@ public class Msg implements Serializable{
     @Override
     public String toString()
     {
-        String m = "Operacao: "+ operacao;
+        String m = "Operacao: "+ route;
         m += "\nStatus: "+status;
         
         m += "\nParâmetros:\n ";
