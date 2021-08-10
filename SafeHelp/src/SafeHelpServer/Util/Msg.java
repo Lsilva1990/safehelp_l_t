@@ -22,12 +22,17 @@ public class Msg implements Serializable{
     chave : Object
     */
     
-    Map<String,Object> params;
+    Map<String,Object> msg;
+    Map<String,Map<String,Object>> params;
+    Map<String,String> identify;
     
     public Msg(String route)
     {
        this.route = route;
+       msg = new HashMap<>();
        params = new HashMap<>();
+       identify = new HashMap<>();
+       
     }
     
     public String getRoute()
@@ -47,15 +52,31 @@ public class Msg implements Serializable{
         "NOME" --> "José"
         "IDADE" --> 35
      */
-    public void setParam( String chave, Object valor )
+    public void setMsg( String chave, Object valor )
     {
-        params.put( chave, valor );
+        msg.put( chave, valor );
     }
     
-    public Object getParam( String chave )
+    public Object getMsg( String chave )
+    {
+        return msg.get(chave);
+    }
+    
+    public void setParams( String chave, Map<String,Object> msg  )
+    {
+        params.put( chave, msg );
+    }
+    
+    public Object getParams( String chave )
     {
         return params.get(chave);
     }
+    
+    public void setParams( String chave, String valor  )
+    {
+        params.put( chave, msg );
+    }
+    
     
     @Override
     public String toString()
@@ -65,7 +86,10 @@ public class Msg implements Serializable{
         
         m += "\nParâmetros:\n ";
         for (String p : params.keySet() ) { 
-            m += p+": " + params.get(p)+"\n";  
+            m += p+": " + params.get(p)+"\n";
+            for(String mg : msg.keySet() ){
+                m += mg+": " + msg.get(msg)+"\n";
+            }
         }
         return m;
     }

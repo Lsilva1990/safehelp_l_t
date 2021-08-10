@@ -65,13 +65,13 @@ public class Server {
                 System.out.println("Mensagem do cliente:\n" + msgReceive);
               
 
-                String route = (String) msgReceive.getParam("identificador");
+                String route = (String) msgReceive.getParam("sad");
                 Msg reply = new Msg(route + "REPLY");
                 //estados conectado autenticado
                 switch (clientStatus) {
                     case CONECTED:
                         switch (route) {
-                            case "login":
+                            case "login:"
                                 try {
                                     String user = (String) msgReceive.getParam("user");
                                     String pass = (String) msgReceive.getParam("pass");
