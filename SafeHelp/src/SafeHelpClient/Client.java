@@ -5,22 +5,50 @@
  */
 package SafeHelpClient;
 
+import com.google.gson.Gson;
+import entidades.Usuario;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
+import org.json.JSONObject;
 
 /**
  *
  * @author thi_s
  */
 public class Client {
+    
+    Gson gson = new Gson();
+    Usuario u = new Usuario(1, "Thiago", "1022547820", "tgimisull@gmail.com", "123");
+    
+    
+      public Client() {
+      }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws IOException {
 
-        Socket socket = new Socket("localhost", 8888);
-        System.out.println("Conectado no servidor!");
-
-    }
+      public void connection() throws IOException{
+           Socket socket = new Socket("localhost", 8888);
+            System.out.println("Conectado no servidor!");
+            OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(),"UTF-8");
+            BufferedReader  reader = new BufferedReader( new InputStreamReader(socket.getInputStream(),"UTF-8"));
+            
+            System.out.println(gson.toJson(u));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("identificador", "login");
+            jsonObject.put("mensagem", u);
+            
+            writer.write( jsonObject.toString() + "\n");
+            writer.flush();
+            String line = null;
+            
+            do{
+            line = reader.readLine();
+            
+            }while(!"sair".equals(line));
+            
+            socket.close();
+      }
+    
 }

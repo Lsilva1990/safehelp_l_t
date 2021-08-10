@@ -5,7 +5,9 @@
  */
 package safehelp;
 
+import SafeHelpClient.Client;
 import SafeHelpServer.Server;
+import java.io.IOException;
 
 
 
@@ -14,15 +16,11 @@ import SafeHelpServer.Server;
  * @author lsilva
  */
 public class SafeHelp {
-//Criada mensagem aqui
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    
+    public static void main(String[] args) throws IOException {
         
-        Server s = new Server(8888);
-        
-        s.run();
+        Server s = new Server();
+    
     }
     
 }
