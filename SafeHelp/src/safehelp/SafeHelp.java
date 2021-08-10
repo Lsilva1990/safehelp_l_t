@@ -19,7 +19,7 @@ public class SafeHelp {
     
     public static void main(String[] args) throws IOException {
         
-        Server s = new Server();
+        Server s = new Server(8888);
     
     }
     

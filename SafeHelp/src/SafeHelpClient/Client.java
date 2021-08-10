@@ -31,22 +31,28 @@ public class Client {
       public void connection() throws IOException{
            Socket socket = new Socket("localhost", 8888);
             System.out.println("Conectado no servidor!");
+            
             OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(),"UTF-8");
             BufferedReader  reader = new BufferedReader( new InputStreamReader(socket.getInputStream(),"UTF-8"));
             
-            System.out.println(gson.toJson(u));
+            //System.out.println(gson.toJson(u));
+            
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("identificador", "login");
-            jsonObject.put("mensagem", u);
+            JSONObject mensagem = new JSONObject();
+            mensagem.put("usuario", "Thiago");
+            mensagem.put("senha", "12345");
+            
+            jsonObject.put("mensagem", mensagem);
             
             writer.write( jsonObject.toString() + "\n");
             writer.flush();
-            String line = null;
+            String line = reader.readLine();
             
             do{
-            line = reader.readLine();
             
-            }while(!"sair".equals(line));
+            
+            }while(!"exit".equals(line));
             
             socket.close();
       }

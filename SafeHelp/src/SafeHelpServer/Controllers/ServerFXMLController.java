@@ -5,8 +5,10 @@
  */
 package SafeHelpServer.Controllers;
 
+import SafeHelpServer.Server;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
  * @author lsilva
  */
 public class ServerFXMLController implements Initializable {
+    
+    Server server;
 
     @FXML
     private AnchorPane anchorpane;
@@ -30,13 +34,11 @@ public class ServerFXMLController implements Initializable {
     @FXML
     private TextField tfPorta;
     @FXML
-    private Button btnCarregarSocket;
-    @FXML
     private ImageView image;
     @FXML
     private Button btnSair;
     @FXML
-    private Button btnCarregarBanco;
+    private Button btOpenServer;
 
     /**
      * Initializes the controller class.
@@ -46,16 +48,15 @@ public class ServerFXMLController implements Initializable {
         // TODO
     }    
 
-    @FXML
-    private void carregarSocket(MouseEvent event) {
-    }
 
     @FXML
     private void sair(MouseEvent event) {
     }
 
+
     @FXML
-    private void carregarBanco(MouseEvent event) {
+    private void openServer(ActionEvent event) {
+         server = new Server(Integer.parseInt(tfPorta.getText()));
     }
     
 }
