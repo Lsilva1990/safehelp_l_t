@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
@@ -29,13 +31,14 @@ import org.json.JSONObject;
 public class Server {
 
     private int bind;
+    UsuarioDAO userDAO;
     Usuario user;
 
     public Server(int bind) {
         createConection(bind);
     }
 
-    private  void createConection(int bind) {
+    private void createConection(int bind) {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(bind);
@@ -57,119 +60,79 @@ public class Server {
         }
     }
 
-    private  void start(final Socket socket) throws IOException {
-        
-        Thread thread = new Thread(){
+    private void start(final Socket socket) throws IOException {
+
+        Thread thread = new Thread() {
             @Override
-            public void run(){
-                
+            public void run() {
+
                 try {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    
+
                     String line = reader.readLine();
                     JSONObject jsonObject = new JSONObject(line);
-                    
-                    writer.write(jsonObject.getString("identificador"));
+
+                    writer.write("Mensagem Recebida :" + jsonObject.getString("id") + " --- " + jsonObject.getString("type"));
                     writer.flush();
-                    
-                    System.out.println("Indentificador recebido: " + jsonObject.getString("identificador"));
-                    
-                    JSONObject mensagem = jsonObject.getJSONObject("mensagem");
-                            
-                    System.err.println("Mensagem Recebida email " + mensagem.getString("usuario"));
-                    
-//                    do {
-//                    switch (jsonObject.getString("identificador")) {
-//                        case "login":
-//                            
-//                            break;
-//                        case "logout":
-//                            protocol.setAction("logout");
-//                            os.writeUTF(gson.toJson(protocol));
-//                            System.out.println(gson.toJson(protocol));
-//                            lista.remove(user);
-//                            lista.remove(os);
-//                            protocol = new Protocolo("listarUsuarios", lista.getCliente());
-//                            for (DataOutputStream cliente : broadcast) {
-//                                cliente.writeUTF(gson.toJson(protocol));
-//                            }
-//                            //writer.write(gson.toJson(lista));
-//                            //writer.close();
-//                            clientSocket.close();
-//                            serv.notifica();
-//                            return;
-//                        case "broadcast":
-//                            protocol = new Protocolo(user.getNome() + ": " + protocol.getMensagem());
-//                            for (DataOutputStream cliente : broadcast) {
-//                                cliente.writeUTF(gson.toJson(protocol));
-//                            }
-//                            serv.notifica(protocol.getMensagem());
-//                            break;
-//                        case "cadastrarServico":
-//                            protocol.getServico().setEmpregador(user);
-//                            lServico.add(protocol.getServico());
-//                            protocol = new Protocolo(lServico.getServicos(), "listarServicos");
-//                            for (DataOutputStream cliente : broadcast) {
-//                                cliente.writeUTF(gson.toJson(protocol));
-//                            }
-//                            serv.notifica();
-//                            break;
-//                        case "mensagemDireta":
-//                            protocol.setRemetente(user);
-//                            DataOutputStream destino;
-//                            i = lista.getUsuarioIndex(protocol.getDestinatario());
-//                            destino = broadcast.get(i);
-//                            protocol.setDestinatario(null);
-//                            destino.writeUTF(gson.toJson(protocol));
-//                            break;
-//                        case "interesseServico":
-//                            i = lServico.getServIndex(protocol.getServico());
-//                            lServico.addInteressado(i, user);
-//                            protocol = new Protocolo(lServico.getListInteresse().get(i));
-//                            i = lista.getUsuarioIndex(protocol.getServico().getEmpregador());
-//                            destino = broadcast.get(i);
-//                            destino.writeUTF(gson.toJson(protocol));
-//                            break;
-//                        case "contratacao":
-//                            i = lista.getUsuarioIndex(protocol.getDestinatario());
-//                            destino = broadcast.get(i);
-//                            protocol.setDestinatario(null);
-//                            destino.writeUTF(gson.toJson(protocol));
-//                            lServico.remove(protocol.getServico());
-//                            protocol = new Protocolo(lServico.getServicos(), "listarServicos");
-//                            for (DataOutputStream cliente : broadcast) {
-//                                cliente.writeUTF(gson.toJson(protocol));
-//                            }
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    System.out.println("Cliente enviou: " + line);
-//                    line = is.readUTF();
-//                    protocol = gson.fromJson(line, Protocolo.class);
-//                } while (line != null);
-                    
-             
+
+                    System.out.println("Mensagem Recebida :" + jsonObject.getString("id") + " --- " + jsonObject.getString("type"));
+
+                    JSONObject data = jsonObject.getJSONObject("data");
+
+                    do {
+                        switch (jsonObject.getString("id")) {
+                            case "user":
+                                switch (jsonObject.getString("type")) {
+                                    case "create":
+                                        user = new Usuario();
+                                        user.setUsuarioNome(data.getString("name"));
+                                        user.setUsuarioCpf(data.getString("cpf"));
+                                        user.setUsuarioEmail(data.getString("email"));
+                                        user.setUsuarioSenha(data.getString("password"));
+                                        user.setUsuarioEndereco(data.getString("address"));
+                                        user.setUsuarioTelefone(data.getString("phone"));
+                                        try {
+                                            userDAO.add(user);
+                                            
+                                        } catch (Exception ex) {
+                                            JSONObject error = new JSONObject();
+                                            JSONObject dataError = new JSONObject();
+                                            error.put("id", "error");
+                                            dataError.put("desc", "error create user");
+                                            error.put("data", dataError);
+                                            writer.write(jsonObject.toString());
+                                        }
+
+                                }
+
+                                break;
+
+                            default:
+                                break;
+                        }
+                        System.out.println("Cliente enviou: " + line);
+                    } while (line != null);
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 } finally {
-                    closeSocket();                  
+                    closeSocket();
                 }
             }
-            
-            private void closeSocket(){
+
+            private void closeSocket() {
                 try {
-                     socket.close();
+                    socket.close();
                 } catch (Exception e) {
-    
+
                 }
             }
-            
+
         };
 
         thread.start();
-        
+
     }
 
 }

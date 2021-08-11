@@ -42,6 +42,7 @@ public class UsuarioDAO {
         return objetoJPA.findUsuarioEntities();
     }
     
+    
     public void persist (Usuario object){
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();

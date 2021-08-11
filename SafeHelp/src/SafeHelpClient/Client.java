@@ -19,7 +19,7 @@ import org.json.JSONObject;
  */
 public class Client {
     
-    Usuario u = new Usuario(1, "Thiago", "1022547820", "tgimisull@gmail.com", "123");
+    Usuario u = new Usuario(null,"Thiago", "1022547820", "thimisull@gmail.com", "123");
     
     
       public Client() {
@@ -36,12 +36,18 @@ public class Client {
             //System.out.println(gson.toJson(u));
             
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("identificador", "login");
-            JSONObject mensagem = new JSONObject();
-            mensagem.put("usuario", "Thiago");
-            mensagem.put("senha", "12345");
+            JSONObject data = new JSONObject(u);
+            jsonObject.put("id", "user");
+            jsonObject.put("type", "create");
+            data.put("name", u.getUsuarioNome());
+            data.put("cpf", u.getUsuarioCpf());
+            data.put("email", u.getUsuarioEmail());
+            data.put("password", u.getUsuarioSenha());
+            data.put("address", u.getUsuarioEndereco());
+            data.put("phone", u.getUsuarioTelefone());
+            jsonObject.put("data", data);
             
-            jsonObject.put("mensagem", mensagem);
+            System.err.println(jsonObject.toString());
             
             writer.write( jsonObject.toString() + "\n");
             writer.flush();
