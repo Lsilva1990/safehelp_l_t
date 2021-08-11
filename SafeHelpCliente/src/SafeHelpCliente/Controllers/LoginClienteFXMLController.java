@@ -21,7 +21,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author lsilva
  */
-public class ClienteFXMLController implements Initializable {
+public class LoginClienteFXMLController implements Initializable {
 
     @FXML
     private AnchorPane anchorpane;
@@ -46,6 +46,7 @@ public class ClienteFXMLController implements Initializable {
 
     @FXML
     private void sair(ActionEvent event) {
+        System.exit(0);
     }
 
     @FXML
