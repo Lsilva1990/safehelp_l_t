@@ -72,7 +72,7 @@ public class LoginClienteFXMLController implements Initializable {
         Parent parent = FXMLLoader.load(getClass().getClassLoader().getResource("SafeHelpCliente/Interfaces/CadastroClienteFXML.fxml"));
         Scene scene = new Scene(parent);
         stage.setScene(scene);
-        stage.setTitle("Cadastro SafeHelp");
+        stage.setTitle("Safe Help");
         stage.setMaximized(false);
         stage.show();
     }
