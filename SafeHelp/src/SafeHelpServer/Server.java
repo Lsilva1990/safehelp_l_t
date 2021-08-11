@@ -11,17 +11,14 @@
  */
 package SafeHelpServer;
 
-import DAO.UsuarioDAO;
-import entidades.Usuario;
+import DAO.UsuariosDAO;
+import Entidades.Usuarios;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
@@ -31,8 +28,8 @@ import org.json.JSONObject;
 public class Server {
 
     private int bind;
-    UsuarioDAO userDAO;
-    Usuario user;
+    UsuariosDAO userDAO;
+    
 
     public Server(int bind) {
         createConection(bind);
@@ -85,15 +82,22 @@ public class Server {
                             case "user":
                                 switch (jsonObject.getString("type")) {
                                     case "create":
-                                        user = new Usuario();
-                                        user.setUsuarioNome(data.getString("name"));
-                                        user.setUsuarioCpf(data.getString("cpf"));
-                                        user.setUsuarioEmail(data.getString("email"));
-                                        user.setUsuarioSenha(data.getString("password"));
-                                        user.setUsuarioEndereco(data.getString("address"));
-                                        user.setUsuarioTelefone(data.getString("phone"));
+                                        Usuarios newUser = new Usuarios();
+                                        newUser.setName(data.getString("name"));
+                                        newUser.setCpf(data.getString("cpf"));
+                                        newUser.setEmail(data.getString("email"));
+                                        newUser.setPassword(data.getString("password"));
+                                        //System.err.println(data.getString("adress"));
+//                                        if(data.getString("adress") !=  JSONObject)
+//                                        newUser.setUsuarioEndereco(data.getString("address"));
+//                                        if(data.getString("phone") != null)
+//                                        newUser.setUsuarioTelefone(data.getString("phone"));
+                                        userDAO = new UsuariosDAO();
                                         try {
-                                            userDAO.add(user);
+                                            userDAO.add(newUser);
+                                            System.err.println("deu boa");
+                                            writer.write("deu boa" + "\n");
+                                            line = null;
                                             
                                         } catch (Exception ex) {
                                             JSONObject error = new JSONObject();
@@ -101,7 +105,10 @@ public class Server {
                                             error.put("id", "error");
                                             dataError.put("desc", "error create user");
                                             error.put("data", dataError);
-                                            writer.write(jsonObject.toString());
+                                            writer.write(jsonObject.toString() + "\n");
+                                            System.err.println(ex.toString());
+                                            line = null;
+                                            break;
                                         }
 
                                 }
@@ -111,7 +118,7 @@ public class Server {
                             default:
                                 break;
                         }
-                        System.out.println("Cliente enviou: " + line);
+                        //System.out.println("Cliente enviou: " + line);
                     } while (line != null);
 
                 } catch (IOException ex) {

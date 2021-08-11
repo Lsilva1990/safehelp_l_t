@@ -138,13 +138,13 @@ public class UsuariosJpaController implements Serializable {
     public Usuarios login(String email, String password) {
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createNamedQuery("User.login");
-            q.setParameter("usuarioEmail", email);
-            q.setParameter("usuarioSenha", password);
+            Query q = em.createNamedQuery("Usuarios.login");
+            q.setParameter("email", email);
+            q.setParameter("password", password);
            
             System.out.println(q.getSingleResult() );
             Usuarios userLoged =  (Usuarios) q.getSingleResult();
-            System.out.println(userLoged.getUsuarioEmail() );
+            System.out.println(userLoged.getEmail() );
             return  userLoged;
         } finally {
             em.close();

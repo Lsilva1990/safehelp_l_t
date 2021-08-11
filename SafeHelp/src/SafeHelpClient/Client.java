@@ -5,7 +5,7 @@
  */
 package SafeHelpClient;
 
-import entidades.Usuario;
+import Entidades.Usuarios;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,8 +18,8 @@ import org.json.JSONObject;
  * @author thi_s
  */
 public class Client {
-    
-    Usuario u = new Usuario(null,"Thiago", "1022547820", "thimisull@gmail.com", "123");
+     String line;
+    Usuarios u = new Usuarios(null,"Thiago", "1022547820", "thimisull@gmail.com", "123");
     
     
       public Client() {
@@ -39,24 +39,20 @@ public class Client {
             JSONObject data = new JSONObject(u);
             jsonObject.put("id", "user");
             jsonObject.put("type", "create");
-            data.put("name", u.getUsuarioNome());
-            data.put("cpf", u.getUsuarioCpf());
-            data.put("email", u.getUsuarioEmail());
-            data.put("password", u.getUsuarioSenha());
-            data.put("address", u.getUsuarioEndereco());
-            data.put("phone", u.getUsuarioTelefone());
+            data.put("name", u.getName());
+            data.put("cpf", u.getCpf());
+            data.put("email", u.getEmail());
+            data.put("password", u.getPassword());
             jsonObject.put("data", data);
             
             System.err.println(jsonObject.toString());
             
             writer.write( jsonObject.toString() + "\n");
             writer.flush();
-            String line = reader.readLine();
+ 
+            line = reader.readLine();
+            System.err.println(line);
             
-            do{
-            
-            
-            }while(!"exit".equals(line));
             
             socket.close();
       }
