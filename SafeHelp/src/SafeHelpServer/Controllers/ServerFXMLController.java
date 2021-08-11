@@ -48,15 +48,14 @@ public class ServerFXMLController implements Initializable {
         // TODO
     }    
 
-
-    @FXML
-    private void sair(MouseEvent event) {
-    }
-
-
     @FXML
     private void openServer(ActionEvent event) {
          server = new Server(Integer.parseInt(tfPorta.getText()));
+    }
+
+    @FXML
+    private void Exit(ActionEvent event) {
+        System.exit(0);
     }
     
 }
