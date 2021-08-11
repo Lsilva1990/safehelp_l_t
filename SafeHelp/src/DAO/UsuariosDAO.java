@@ -5,32 +5,32 @@
  */
 package DAO;
 
-import entidades.Usuario;
+import Entidades.Usuarios;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import jpaControles.UsuarioJpaController;
+import jpaControles.UsuariosJpaController;
 import jpaControles.exceptions.NonexistentEntityException;
 
 /**
  *
  * @author lsilva
  */
-public class UsuarioDAO {
-    private final UsuarioJpaController objetoJPA;
+public class UsuariosDAO {
+    private final UsuariosJpaController objetoJPA;
     private final EntityManagerFactory emf;
-    
-    public UsuarioDAO(){
+
+    public UsuariosDAO(){
         emf=Persistence.createEntityManagerFactory("SafeHelpPU");
-        objetoJPA = new UsuarioJpaController(emf);
+        objetoJPA = new UsuariosJpaController(emf);
     }
     
-    public void add(Usuario objeto) throws Exception{
+    public void add(Usuarios objeto) throws Exception{
         objetoJPA.create(objeto);
     }
     
-    public void edit(Usuario objeto) throws Exception{
+    public void edit(Usuarios objeto) throws Exception{
         objetoJPA.edit(objeto);
     }
     
@@ -38,12 +38,12 @@ public class UsuarioDAO {
         objetoJPA.destroy(id);
     }
     
-    public List<Usuario> geAllUsuario(){
-        return objetoJPA.findUsuarioEntities();
+    public List<Usuarios> geAllUsuario(){
+        return objetoJPA.findUsuariosEntities();
     }
     
     
-    public void persist (Usuario object){
+    public void persist (Usuarios object){
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         try{
@@ -57,10 +57,12 @@ public class UsuarioDAO {
         }
     }
     
-     public Usuario userLogin(String email, String password){
-        Usuario login = objetoJPA.login(email, password);
+     public Usuarios userLogin(String email, String password){
+        Usuarios login = objetoJPA.login(email, password);
         System.out.println( "DAO   -    " + login.getUsuarioEmail());
         return login;
         }
+    
+}
     
 }
