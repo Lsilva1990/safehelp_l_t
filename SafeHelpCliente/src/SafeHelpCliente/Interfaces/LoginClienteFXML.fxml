@@ -34,7 +34,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="tfUser" prefHeight="23.0" prefWidth="230.0" GridPane.columnIndex="1" />
+            <TextField fx:id="tfEmail" prefHeight="23.0" prefWidth="230.0" GridPane.columnIndex="1" />
             <Label contentDisplay="RIGHT" prefHeight="16.0" prefWidth="63.0" text="Email" />
             <Label text="Senha" GridPane.rowIndex="1" />
             <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -47,5 +47,6 @@
             <Image url="@Utils/user.png" />
          </image>
       </ImageView>
+      <Button fx:id="btnCadastrar" layoutX="25.0" layoutY="167.0" mnemonicParsing="false" onAction="#Cadastrar" text="Cadastrar" />
    </children>
 </AnchorPane>
