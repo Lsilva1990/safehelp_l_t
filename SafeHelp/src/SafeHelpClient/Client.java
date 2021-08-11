@@ -18,6 +18,7 @@ import org.json.JSONObject;
  * @author thi_s
  */
 public class Client {
+
      String line;
     Usuarios u = new Usuarios(null,"Lucas", "1022547820", "thimisull@gmail.com", "123");
     
@@ -55,6 +56,40 @@ public class Client {
             
             
             socket.close();
+            
+            //            Create User 
+//        JSONObject jsonObject = new JSONObject();
+//        JSONObject data = new JSONObject(u);
+//        jsonObject.put("id", "user");
+//        jsonObject.put("type", "create");
+//        data.put("name", u.getName());
+//        data.put("cpf", u.getCpf());
+//        data.put("email", u.getEmail());
+//        data.put("password", u.getPassword());
+//        jsonObject.put("data", data);
+//        
+//        System.err.println(jsonObject.toString());
+//
+//        writer.write(jsonObject.toString() + "\n");
+//        writer.flush();
+
+//              Login
+        JSONObject jsonObjectLogin = new JSONObject();
+        JSONObject dataLogin = new JSONObject();
+        jsonObjectLogin.put("id", "login");
+        dataLogin.put("email", "thimisull@gmail.com");
+        dataLogin.put("password", "123");
+        jsonObjectLogin.put("data", dataLogin);
+
+        System.err.println(jsonObjectLogin.toString());
+
+        writer.write(jsonObjectLogin.toString() + "\n");
+        writer.flush();
+
+        line = reader.readLine();
+        System.err.println(line);
+
+        socket.close();
       }
     
 }
