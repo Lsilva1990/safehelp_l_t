@@ -72,7 +72,7 @@ public class LoginClienteFXMLController implements Initializable {
         Parent parent = FXMLLoader.load(getClass().getClassLoader().getResource("SafeHelpCliente/Interfaces/CadastroClienteFXML.fxml"));
         Scene scene = new Scene(parent);
         stage.setScene(scene);
-        stage.setTitle("Oracle Query optimizer T_L");
+        stage.setTitle("Cadastro SafeHelp");
         stage.setMaximized(false);
         stage.show();
     }
