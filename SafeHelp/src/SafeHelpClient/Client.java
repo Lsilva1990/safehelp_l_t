@@ -19,20 +19,45 @@ import org.json.JSONObject;
  */
 public class Client {
 
-    String line;
-    Usuarios u = new Usuarios(null, "Thiago", "1022547820", "thimisull@gmail.com", "123");
+     String line;
+    Usuarios u = new Usuarios(null,"Lucas", "1022547820", "thimisull@gmail.com", "123");
+    
+    
+      public Client() {
+      }
 
-    public Client() {
-    }
 
-    public void connection() throws IOException {
-        Socket socket = new Socket("localhost", 8888);
-        System.out.println("Conectado no servidor!");
-
-        OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-
-//            Create User 
+      public void connection() throws IOException{
+           Socket socket = new Socket("localhost", 8888);
+            System.out.println("Conectado no servidor!");
+            
+            OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(),"UTF-8");
+            BufferedReader  reader = new BufferedReader( new InputStreamReader(socket.getInputStream(),"UTF-8"));
+            
+            //System.out.println(gson.toJson(u));
+            
+            JSONObject jsonObject = new JSONObject();
+            JSONObject data = new JSONObject(u);
+            jsonObject.put("id", "user");
+            jsonObject.put("type", "create");
+            data.put("name", u.getName());
+            data.put("cpf", u.getCpf());
+            data.put("email", u.getEmail());
+            data.put("password", u.getPassword());
+            jsonObject.put("data", data);
+            
+            System.err.println(jsonObject.toString());
+            
+            writer.write( jsonObject.toString() + "\n");
+            writer.flush();
+ 
+            line = reader.readLine();
+            System.err.println(line);
+            
+            
+            socket.close();
+            
+            //            Create User 
 //        JSONObject jsonObject = new JSONObject();
 //        JSONObject data = new JSONObject(u);
 //        jsonObject.put("id", "user");
@@ -65,5 +90,6 @@ public class Client {
         System.err.println(line);
 
         socket.close();
-    }
+      }
+    
 }
