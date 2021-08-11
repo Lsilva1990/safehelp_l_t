@@ -20,13 +20,9 @@ public class SafeHelpClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Client c = new Client();
+        Client c = new Client("localhost", 8888);
         
-        try {
-            c.connection();
-        } catch (IOException ex) {
-            Logger.getLogger(SafeHelpClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+      
                
     }
     

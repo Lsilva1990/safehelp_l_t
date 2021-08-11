@@ -57,7 +57,7 @@ public class Server {
         }
     }
 
-    private void start(final Socket socket) throws IOException {
+    private void start(final Socket socket) {
 
         Thread thread = new Thread() {
             @Override
@@ -70,8 +70,8 @@ public class Server {
                     String line = reader.readLine();
                     JSONObject jsonObject = new JSONObject(line);
 
-                    writer.write("Mensagem Recebida :" + jsonObject.getString("id"));
-                    writer.flush();
+//                    writer.write("Mensagem Recebida :" + jsonObject.getString("id"));
+//                    writer.flush();
 
                     System.out.println("Mensagem Recebida :" + jsonObject.getString("id"));
 
