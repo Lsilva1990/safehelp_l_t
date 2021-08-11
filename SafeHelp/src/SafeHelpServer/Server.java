@@ -29,7 +29,7 @@ public class Server {
 
     private int bind;
     UsuariosDAO userDAO;
-    
+    Usuarios userLoged;
 
     public Server(int bind) {
         createConection(bind);
@@ -70,10 +70,10 @@ public class Server {
                     String line = reader.readLine();
                     JSONObject jsonObject = new JSONObject(line);
 
-                    writer.write("Mensagem Recebida :" + jsonObject.getString("id") + " --- " + jsonObject.getString("type"));
+                    writer.write("Mensagem Recebida :" + jsonObject.getString("id"));
                     writer.flush();
 
-                    System.out.println("Mensagem Recebida :" + jsonObject.getString("id") + " --- " + jsonObject.getString("type"));
+                    System.out.println("Mensagem Recebida :" + jsonObject.getString("id"));
 
                     JSONObject data = jsonObject.getJSONObject("data");
 
@@ -98,7 +98,7 @@ public class Server {
                                             System.err.println("deu boa");
                                             writer.write("deu boa" + "\n");
                                             line = null;
-                                            
+
                                         } catch (Exception ex) {
                                             JSONObject error = new JSONObject();
                                             JSONObject dataError = new JSONObject();
@@ -110,13 +110,50 @@ public class Server {
                                             line = null;
                                             break;
                                         }
+                                    case "update":
+                                        Usuarios udpateUser = new Usuarios();
+                                        udpateUser.setName(data.getString("name"));
+                                        udpateUser.setCpf(data.getString("cpf"));
+                                        udpateUser.setEmail(data.getString("email"));
+                                        udpateUser.setPassword(data.getString("password"));
+                                        //System.err.println(data.getString("adress"));
+//                                        if(data.getString("adress") !=  JSONObject)
+//                                        newUser.setUsuarioEndereco(data.getString("address"));
+//                                        if(data.getString("phone") != null)
+//                                        newUser.setUsuarioTelefone(data.getString("phone"));
+                                        userDAO = new UsuariosDAO();
+                                        try {
+                                            userDAO.add(udpateUser);
+                                            System.err.println("deu boa");
+                                            writer.write("deu boa" + "\n");
+                                            line = null;
 
+                                        } catch (Exception ex) {
+                                            JSONObject error = new JSONObject();
+                                            JSONObject dataError = new JSONObject();
+                                            error.put("id", "error");
+                                            dataError.put("desc", "error create user");
+                                            error.put("data", dataError);
+                                            writer.write(jsonObject.toString() + "\n");
+                                            System.err.println(ex.toString());
+                                            line = null;
+                                            break;
+                                        }
+                                    default:
+                                        break;
                                 }
-
+                            case "login":
+                                userLoged = new Usuarios();
+                                String email = data.getString("email");
+                                String password = data.getString("password");
+                                userDAO = new UsuariosDAO();
+                                userLoged = userDAO.userLogin(email, password);
+                                writer.write(userLoged.getId().toString());
+                                System.err.println(userLoged.getId().toString());
+                                line = null;
                                 break;
-
                             default:
-                                break;
+                                break;  
                         }
                         //System.out.println("Cliente enviou: " + line);
                     } while (line != null);
