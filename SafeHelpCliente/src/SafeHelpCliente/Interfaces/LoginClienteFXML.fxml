@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorpane" prefHeight="213.0" prefWidth="464.0" stylesheets="@Utils/tela_login_estilo.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SafeHelpCliente.Interfaces.ClienteFXMLController">
+<AnchorPane id="AnchorPane" fx:id="anchorpane" prefHeight="213.0" prefWidth="464.0" stylesheets="@Utils/tela_login_estilo.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SafeHelpCliente.Controllers.LoginClienteFXMLController">
        <children>
       <Label fx:id="lbTitulo" alignment="CENTER" layoutX="117.0" layoutY="14.0" prefHeight="20.0" prefWidth="230.0" text="SAFE HELP CLIENT" textAlignment="CENTER">
          <font>
